@@ -1,0 +1,29 @@
+<%- include('layout') %>
+
+<h1>Dashboard</h1>
+
+<a href="/tasks/new">Add New Task</a>
+
+<ul>
+
+    <% tasks.forEach(task => { %>
+
+        <li>
+
+            <strong><%= task.title %></strong>: <%= task.description %>
+
+            <a href="/tasks/<%= task._id %>/edit">Edit</a>
+
+            <form action="/tasks/<%= task._id %>?_method=DELETE" method="POST" style="display:inline;">
+
+                <button type="submit">Delete</button>
+
+            </form>
+
+        </li>
+
+    <% }) %>
+
+</ul>
+
+<a href="/logout">Logout</a>
