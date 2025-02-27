@@ -1,29 +1,28 @@
-<%- include('layout') %>
 
-<h1>Dashboard</h1>
-
-<a href="/tasks/new">Add New Task</a>
-
-<ul>
-
-    <% tasks.forEach(task => { %>
-
-        <li>
-
-            <strong><%= task.title %></strong>: <%= task.description %>
-
-            <a href="/tasks/<%= task._id %>/edit">Edit</a>
-
-            <form action="/tasks/<%= task._id %>?_method=DELETE" method="POST" style="display:inline;">
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard-Task Manager</title>
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>Tasks list</h1>
+        <ul>
+          <% tasks.forEach(task => { %>
+            <li>
+              <input type="checkbox" name="selectedTask" value="<%= task._id %>" />
+              <strong><%= task.title %></strong> - <%= task.description %>
+              <a href="/task/<%+task._id%>/edit"><button>Edit</button></a>
+              <form action="/task/<%= task._id %>?_method=DELETE" method="POST" style="display: inline;">
                 <button type="submit">Delete</button>
-
-            </form>
-
-        </li>
-
-    <% }) %>
-
-</ul>
-
-<a href="/logout">Logout</a>
+              </form>
+            </li>
+          <% }) %>
+        </ul>>
+        <a href="/tasks/new"><button>Add</button></a>
+        <a href="/logout"><button>Logout</button></a>
+      </div>
+</body>
+</html>

@@ -1,9 +1,25 @@
-<form action="/login" method="POST">
 
-    <input type="email" name="email" required>
-
-    <input type="password" name="password" required>
-
-    <button type="submit">Login</button>
-
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login-Task Manager</title>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Welcome to your Task Manager</h1>
+        <p>The best way to manage your personal tasks!</p>
+        <form 
+        action="/login" method="POST">
+          <label for="email">Email</label>
+          <input type="email" name="email" id="email" required>
+          <label for="password">Password</label>
+          <input type="password" name="password" id="password" required>
+          <button type="submit">Login</button>
+        </form><p>Don't have an account?  
+            <a href="/register">
+              <button>Sign up</button></p>
+      </div>
+</body>
+</html>
