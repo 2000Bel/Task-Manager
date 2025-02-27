@@ -14,8 +14,8 @@
             <li>
               <input type="checkbox" name="selectedTask" value="<%= task._id %>" />
               <strong><%= task.title %></strong> - <%= task.description %>
-              <a href="/task/<%+task._id%>/edit"><button>Edit</button></a>
-              <form action="/task/<%= task._id %>?_method=DELETE" method="POST" style="display: inline;">
+              <a href="/tasks/<%=task._id%>/edit"><button>Edit</button></a>
+              <form action="/tasks/<%= task._id %>?_method=DELETE" method="POST" style="display: inline;">
                 <button type="submit">Delete</button>
               </form>
             </li>
