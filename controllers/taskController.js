@@ -1,27 +1,48 @@
 //controller/taskController.js
+const express = require("express");
 const Task = require("../models/Task");
 
-exports.showTasks = async (req, res) => {
-  const tasks = await Task.find({ user: req.session.user._id });
-  res.render("dashboard", { tasks });
+const showTasks = async (req, res) => {
+  try{
+  const tasks = await Task.find({user: req.session.user._id});
+  res.render("dashboard", { tasks});
+} catch (error) {
+  console.error(error);
+  res.status(500).send("Server Error");
+}
 };
 
-exports.addTask = async (req, res) => {
-  await Task.create({ ...req.body, user: req.session.user._id });
+const addTask = async (req, res) => {
+  const { title, description } = req.body;
+  await Task.create({ title, description, user: req.session.user._id });
   res.redirect("/tasks");
-};
+}
 
-exports.editTask = async (req, res) => {
+const editTask = async (req, res) => {
   const task = await Task.findById(req.params.id);
   res.render("task_form", { task });
-};
+}
 
-exports.updateTask = async (req, res) => {
-  await Task.findByIdAndUpdate(req.params.id, req.body);
+const updateTask = async (req, res) => {
+  const { title, description } = req
+    .body;
+  await Task.findByIdAndUpdate(req.params.id, { title, description });
   res.redirect("/tasks");
-};
+}
 
-exports.deleteTask = async (req, res) => {
+const deleteTask = async (req, res) => {
   await Task.findByIdAndDelete(req.params.id);
   res.redirect("/tasks");
+}
+
+module.exports = {
+  showTasks,
+  addTask,
+  editTask,
+  updateTask,
+  deleteTask
 };
+
+
+
+

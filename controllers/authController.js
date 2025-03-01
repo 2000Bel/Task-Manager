@@ -1,34 +1,40 @@
 //controllers/authController.js
+const express = require("express");
 const User = require("../models/User");
-const bcrypt = require("bcryptjs");
+const Task = require("../models/Task");
 
-exports.showLogin = (req, res) => res.render("login");
-exports.showRegister = (req, res) => res.render("register");
-
-exports.register = async (req, res) => {
+const register = async (req, res) => {
+  try{
   const { name, email, password } = req.body;
-  try {
-    await User.create({ name, email, password });
-    res.redirect("/login");
-  } catch (err) {
-    console.error(err);
-    res.send("Error registering user");
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    return res.send("User already exists");
   }
+  const newUser = new User({ name, email, password});
+  await newUser.save();
+  return res.redirect("/login");
+} catch (error) {
+  console.error(error);
+  res.status(500).send("Server Error");
+}
 };
 
-exports.login = async (req, res) => {
+const login = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
-  if (!user || !(await bcrypt.compare(password, user.password))) {
-    return res.send("Invalid email or password");
-  }
+  if (!user || user.password !== password) {
+    return res.send("invalid email or password");
+  } 
   req.session.user = user;
-
+  const tasks = await Task.find({user: user._id});
   res.redirect("/tasks");
 };
 
-exports.logout = (req, res) => {
-  req.session.destroy(() => res.redirect("/login"));
-};
+const logout = (req, res) => {
+  req.session.destroy();
+  res.redirect("/login");
+}
+
+module.exports = { login, register, logout};
 
 
