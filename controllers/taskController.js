@@ -1,48 +1,46 @@
-//controller/taskController.js
+//controllers/authController.js
 const express = require("express");
 const Task = require("../models/Task");
+const isSignedIn = require("../middleware/is-signed-in");
 
-const showTasks = async (req, res) => {
-  try{
-  const tasks = await Task.find({user: req.session.user._id});
-  res.render("dashboard", { tasks});
-} catch (error) {
-  console.error(error);
-  res.status(500).send("Server Error");
-}
-};
+const router = express.Router();
 
-const addTask = async (req, res) => {
+router.get("/tasks", isSignedIn, async (req, res) => {
+  const tasks = await Task.find({ user: req.session.user._id });
+  res.render("dashboard", { tasks });
+});
+
+// New task form
+router.get("/tasks/new", isSignedIn, (req, res) => {
+  res.render("task_form", {task:null});
+});
+
+// Creat new task
+router.post("/tasks", isSignedIn, async (req, res) => {
   const { title, description } = req.body;
-  await Task.create({ title, description, user: req.session.user._id });
+  const newTask = new Task({ title, description, user: req.session.user._id });
+  await newTask.save();
   res.redirect("/tasks");
-}
+});
 
-const editTask = async (req, res) => {
+// Edit task
+router.get("/tasks/:id/edit", isSignedIn, async (req, res) => {
   const task = await Task.findById(req.params.id);
+  if(!task) return res.send("Task not found");
   res.render("task_form", { task });
-}
+});
 
-const updateTask = async (req, res) => {
-  const { title, description } = req
-    .body;
+//Update task
+router.put("/tasks/:id", isSignedIn, async (req, res) => {
+  const { title, description } = req.body;
   await Task.findByIdAndUpdate(req.params.id, { title, description });
   res.redirect("/tasks");
-}
+});
 
-const deleteTask = async (req, res) => {
+//Delete task
+router.delete("/tasks/:id", isSignedIn, async (req, res) => {
   await Task.findByIdAndDelete(req.params.id);
   res.redirect("/tasks");
-}
+});
 
-module.exports = {
-  showTasks,
-  addTask,
-  editTask,
-  updateTask,
-  deleteTask
-};
-
-
-
-
+module.exports = router;

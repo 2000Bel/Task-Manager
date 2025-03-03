@@ -7,14 +7,14 @@ const session = require("express-session");
 const methodOverride = require("method-override");
 const morgan = require("morgan");
 const path = require("path");
-const Task = require('./models/Task');
+
 const port = process.env.PORT ? process.env.PORT : "3000";
 
-const {register, login, logout} = require("./controllers/authController");
-const {showTasks, addTask, editTask, updateTask, deleteTask} = require("./controllers/taskController");
 
 const passUserToView = require("./middleware/pass-user-to-view");
-const isSignedIn = require("./middleware/is-signed-in");
+const authController = require("./controllers/authController");
+const taskController = require("./controllers/taskController");
+
 
 const app = express();
 
@@ -27,7 +27,6 @@ app.use(express.static("public"))
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(methodOverride("_method"));
-app.use(express.static("public"));
 app.use(morgan("dev"));
 
 app.use(
@@ -48,39 +47,8 @@ mongoose.connection.on('connected', () => {
 });
 
 //Routes
- app.get("/", (req, res) => {
-     res.render("login");
-  });
-app.get("/login", (req, res) =>{
-  res.render("login");
-});
-app.get("/register", (req, res) =>{
-  res.render("register");
-});
-app.get("/dashboard", isSignedIn, async (req,res)=>{
-  try{
-    const tasks = await Task.find({user:req.session.user._id});
-    res.render("dashboard", {user: req.session.user, tasks});
-  } catch (error){
-    console.error("tasks:", error);
-    res.status(500).send("Error");
-  }
-});
-app.post("/login", login);
-app.post("/register", register);
-app.get("/tasks/new", isSignedIn, (req, res) => {
-    res.render("task_form", { task: null });
-});
-app.get("/tasks", isSignedIn, showTasks);
-  app.get("/tasks/new", isSignedIn, (req, res) => {
-      res.render("task_form", { task: null });
-  });
-  app.post("/tasks", isSignedIn, addTask);
-  app.get("/tasks/:id/edit", isSignedIn, editTask);
-  app.put("/tasks/:id", isSignedIn, updateTask);
-  app.delete("/tasks/:id", isSignedIn, deleteTask);
-  app.get("/logout", logout);
-
+ app.use("/", authController);
+ app.use("/", taskController);
 
 app.listen(port, () => {
   console.log(`Listening on Port ${port}!`);
