@@ -4,6 +4,7 @@ const User = require("../models/User");
 const Task = require("../models/Task");
 
 const register = async (req, res) => {
+  try{
   const { name, email, password } = req.body;
   const existingUser = await User.findOne({ email });
   if (existingUser) {
@@ -12,6 +13,10 @@ const register = async (req, res) => {
   const newUser = new User({ name, email, password});
   await newUser.save();
   return res.redirect("/login");
+} catch (error) {
+  console.error(error);
+  res.status(500).send("Server Error");
+}
 };
 
 const login = async (req, res) => {
