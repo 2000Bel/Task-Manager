@@ -13,7 +13,8 @@ const port = process.env.PORT ? process.env.PORT : "3000";
 const {register, login, logout} = require("./controllers/authController");
 const {showTasks, addTask, editTask, updateTask, deleteTask} = require("./controllers/taskController");
 
-const auth = require("./middleware/auth");
+const passUserToView = require("./middleware/pass-user-to-view");
+const isSignedIn = require("./middleware/is-signed-in");
 
 const app = express();
 
@@ -37,6 +38,8 @@ app.use(
   })
 );
 
+app.use(passUserToView);
+
 // connetion to DB
 mongoose.connect(process.env.MONGODB_URI);
 
@@ -54,7 +57,7 @@ app.get("/login", (req, res) =>{
 app.get("/register", (req, res) =>{
   res.render("register");
 });
-app.get("/dashboard", auth, async (req,res)=>{
+app.get("/dashboard", isSignedIn, async (req,res)=>{
   try{
     const tasks = await Task.find({user:req.session.user._id});
     res.render("dashboard", {user: req.session.user, tasks});
@@ -65,17 +68,17 @@ app.get("/dashboard", auth, async (req,res)=>{
 });
 app.post("/login", login);
 app.post("/register", register);
-app.get("/tasks/new", auth, (req, res) => {
+app.get("/tasks/new", isSignedIn, (req, res) => {
     res.render("task_form", { task: null });
 });
-app.get("/tasks", auth, showTasks);
-  app.get("/tasks/new", auth, (req, res) => {
+app.get("/tasks", isSignedIn, showTasks);
+  app.get("/tasks/new", isSignedIn, (req, res) => {
       res.render("task_form", { task: null });
   });
-  app.post("/tasks", auth, addTask);
-  app.get("/tasks/:id/edit", auth, editTask);
-  app.put("/tasks/:id", auth, updateTask);
-  app.delete("/tasks/:id", auth, deleteTask);
+  app.post("/tasks", isSignedIn, addTask);
+  app.get("/tasks/:id/edit", isSignedIn, editTask);
+  app.put("/tasks/:id", isSignedIn, updateTask);
+  app.delete("/tasks/:id", isSignedIn, deleteTask);
   app.get("/logout", logout);
 
 
