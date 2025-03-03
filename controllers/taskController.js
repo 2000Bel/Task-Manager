@@ -3,13 +3,8 @@ const express = require("express");
 const Task = require("../models/Task");
 
 const showTasks = async (req, res) => {
-  try{
   const tasks = await Task.find({user: req.session.user._id});
   res.render("dashboard", { tasks});
-} catch (error) {
-  console.error(error);
-  res.status(500).send("Server Error");
-}
 };
 
 const addTask = async (req, res) => {
@@ -35,13 +30,7 @@ const deleteTask = async (req, res) => {
   res.redirect("/tasks");
 }
 
-module.exports = {
-  showTasks,
-  addTask,
-  editTask,
-  updateTask,
-  deleteTask
-};
+module.exports = { showTasks, addTask, editTask, updateTask, deleteTask };
 
 
 

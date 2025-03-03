@@ -19,6 +19,7 @@ const app = express();
 //EJS
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+app.use(express.static("public"));
 
 //Middleware
 app.use(express.urlencoded({ extended: false }));
@@ -27,17 +28,14 @@ app.use(methodOverride("_method"));
 app.use(express.static("public"));
 app.use(morgan("dev"));
 
-app.use(
-  session({
+app.use( session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-  })
-);
+  }));
 
 // connetion to DB
 mongoose.connect(process.env.MONGODB_URI);
-
 mongoose.connection.on('connected', () => {
   console.log(`Connected on MongoDB ${mongoose.connection.name}`);
 });
@@ -53,17 +51,11 @@ app.get("/register", (req, res) =>{
   res.render("register");
 });
 app.get("/dashboard", auth, async (req,res)=>{
-  try{
     const tasks = await Task.find({user:req.session.user._id});
     res.render("dashboard", {user: req.session.user, tasks});
-  } catch (error){
-    console.error("tasks:", error);
-    res.status(500).send("Error");
-  }
 });
 app.post("/login", login);
 app.post("/register", register);
-app.get("/logout", logout);
 app.get("/tasks/new", auth, (req, res) => {
     res.render("task_form", { task: null });
 });

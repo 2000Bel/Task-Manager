@@ -1,0 +1,134 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #e0e0e0;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.login-container img{
+  display: block;
+  margin: 20px auto;
+  max-width: 80%;
+  height: auto;
+}
+
+.container,
+.dashboard-container,
+.login-container,
+.signup-container,
+.task-form-container {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 800px;
+  margin: 20px auto;
+}
+
+h1 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+/* Buttons */
+button {
+  padding: 12px;
+  background-color: #00af37;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #04ff19;
+}
+
+/*Style of tasks list */
+.dashboard-container ul {
+  list-style: none;
+  padding: 0;
+}
+
+.dashboard-container li {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 10px;
+}
+
+.dashboard-container li input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+/* Organization of text in tasks */
+.dashboard-container li strong {
+  margin-left: 10px;
+  font-size: 1.1rem;
+  flex: 1;
+  color: #444;
+}
+
+/* Buttons of tasks */
+.dashboard-container li a button {
+  margin-left: 10px;
+  background-color: #28a745;
+}
+
+.dashboard-container li form button {
+  margin-left: 10px;
+  background-color: #dc3545;
+}
+
+.dashboard-container li a button:hover {
+  background-color: #218838;
+}
+
+.dashboard-container li form button:hover {
+  background-color: #c82333;
+}
+
+/* Button Logout */
+.logout-button {
+  background-color: #ff1f1f;
+  padding: 10px 15px;
+  border-radius: 6px;
+}
+
+.logout-button:hover {
+  background-color: #b70000;
+}
